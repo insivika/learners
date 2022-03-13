@@ -1,19 +1,18 @@
 import axios from "axios";
 import NumberFormat from "react-number-format";
 import Link from "next/link";
-
-import { Card, Container, Grid, Avatar, Typography, Box } from "@mui/material";
+import PageLayout from "../../layouts/PageLayout";
+import { Card, Grid, Avatar, Typography, Box } from "@mui/material";
 
 const Learners = ({ learners }) => {
-  console.log(learners);
   return (
-    <Container>
-      <Grid container spacing={1}>
+    <PageLayout title={"Learners"}>
+      <Grid container spacing={2}>
         {learners.map((learner) => {
           return (
-            <Grid key={learner.id} item xs={12}>
-              <Card>
-                <Box>
+            <Link key={learner.id} href={`/learners/${learner.id}`}>
+              <Grid item xs={12} sx={{ cursor: "pointer" }}>
+                <Card>
                   <Grid container item>
                     <Grid item>
                       <Box mr={1}>
@@ -43,13 +42,13 @@ const Learners = ({ learners }) => {
                       </Box>
                     </Grid>
                   </Grid>
-                </Box>
-              </Card>
-            </Grid>
+                </Card>
+              </Grid>
+            </Link>
           );
         })}
       </Grid>
-    </Container>
+    </PageLayout>
   );
 };
 
