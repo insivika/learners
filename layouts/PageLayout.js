@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Navigation from "../components/common/Navigation";
 import Footer from "../components/common/Footer";
-import { Container } from "@mui/material";
+import { Container, Box } from "@mui/material";
 
 const PageLayout = ({ children, title, description }) => {
   return (
@@ -12,7 +12,9 @@ const PageLayout = ({ children, title, description }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navigation />
-      <Container component="main">{children}</Container>
+      <Container component="main">
+        <Box pb={3}>{children}</Box>
+      </Container>
       <Footer />
     </>
   );
