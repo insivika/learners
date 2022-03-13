@@ -1,4 +1,5 @@
 import PageLayout from "../layouts/PageLayout";
+import LearnerLogo from "../assets/learnerlogonew.png";
 import Instructions from "../components/Instructions";
 import About from "../components/About";
 import Contact from "../components/Contact";
@@ -25,7 +26,7 @@ export default function Home() {
           py={15}
         >
           <Typography variant="h1" sx={{ color: "#33523E", fontSize: 36 }}>
-            WE ARE LEARNER
+            WE ARE <span><Image src={LearnerLogo} alt="" /></span>
           </Typography>
           <Typography variant="h6" gutterBottom>
             Funding the future of tomorrow one learner at a time
