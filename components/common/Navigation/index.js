@@ -13,7 +13,9 @@ const Navigation = () => {
         pt={2}
         pb={2}
       >
-        <Image src={Logo} alt="Logo" />
+        <Link href="/">
+          <Image src={Logo} alt="Logo" />
+        </Link>
         <Box display="flex">
           <Box mr={1} sx={{ fontWeight: 500 }}>
             <Link href="/">Home</Link>
@@ -22,10 +24,10 @@ const Navigation = () => {
             <Link href="/about">About</Link>
           </Box>
           <Box mr={1} sx={{ fontWeight: 500 }}>
-            <Link href="/learn">Learn</Link>
+            <Link href="/learners">Learn</Link>
           </Box>
           <Box mr={1} sx={{ fontWeight: 500 }}>
-            <Link href="/fund">Fund</Link>
+            <Link href="/learners">Fund</Link>
           </Box>
           <Box mr={1} sx={{ fontWeight: 500 }}>
             <Link href="/contact">Contact</Link>
