@@ -1,4 +1,5 @@
 import PageLayout from "../layouts/PageLayout";
+import Instructions from "../components/Instructions";
 import About from "../components/About";
 import Contact from "../components/Contact";
 import styles from "../styles/Home.module.css";
@@ -13,14 +14,15 @@ export default function Home() {
       <Box display="flex" sx={{ background: "#D9D0B8" }}>
         <Box
           display="flex"
-          flex={1}
+          flex={2}
           alignContent="center"
           flexDirection="column"
           justifyContent="center"
           pr={2}
-          pl={2}
-          pt={3}
-          pb={3}
+          pl={10}
+          pt={6}
+          pb={4}
+          py={15}
         >
           <Typography variant="h1" sx={{ color: "#33523E", fontSize: 36 }}>
             WE ARE LEARNER
@@ -35,20 +37,9 @@ export default function Home() {
             Get Started
           </Button>
         </Box>
-        <Box flex={2}>
+        <Box pt={7} pr={3} flex={4}>
           <Image src={HeroArt} alt="Hero art" />
         </Box>
-        <Box
-          display="flex"
-          flex={1}
-          alignContent="center"
-          flexDirection="column"
-          justifyContent="center"
-          pr={2}
-          pl={2}
-          pt={3}
-          pb={3}
-        ></Box>
       </Box>
 
       {/* Three Box Mission */}
@@ -126,6 +117,8 @@ export default function Home() {
           </Grid>
         </Grid>
       </Box>
+{/* INSTRUCTIONS */}
+    <Instructions></Instructions>
       {/* ABOUT */}
       <About></About>
       {/* CONTACT */}
