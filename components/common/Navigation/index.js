@@ -16,20 +16,20 @@ const Navigation = () => {
         <Link href="/">
           <Image src={Logo} alt="Logo" />
         </Link>
-        <Box display="flex">
-          <Box mr={1} sx={{ fontWeight: 500 }}>
+        <Box display="flex" sx={{ color: "#274A5E" }}>
+          <Box mr={2} sx={{ fontWeight: 500 }}>
             <Link href="/">Home</Link>
           </Box>
-          <Box mr={1} sx={{ fontWeight: 500 }}>
+          <Box mr={2} sx={{ fontWeight: 500 }}>
             <Link href="/about">About</Link>
           </Box>
-          <Box mr={1} sx={{ fontWeight: 500 }}>
-            <Link href="/learners">Learn</Link>
+          <Box mr={2} sx={{ fontWeight: 500 }}>
+            <Link href="/learners">Learners</Link>
           </Box>
-          <Box mr={1} sx={{ fontWeight: 500 }}>
-            <Link href="/learners">Fund</Link>
+          <Box mr={2} sx={{ fontWeight: 500 }}>
+            <Link href="/funders">Funders</Link>
           </Box>
-          <Box mr={1} sx={{ fontWeight: 500 }}>
+          <Box mr={2} sx={{ fontWeight: 500 }}>
             <Link href="/contact">Contact</Link>
           </Box>
         </Box>
