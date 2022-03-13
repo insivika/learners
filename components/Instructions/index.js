@@ -23,7 +23,9 @@ function Instructions() {
           pb={3}
           sx={{ py: 6, width: "100%", background: "#" }}
         >
-          <Typography variant="h4">Share Your Story</Typography>
+          <Typography gutterBottom variant="h4">
+            Share Your Story
+          </Typography>
           <Typography>
             This is a paragraph Ipsum labore ut tempor anim ut veniam sint
             reprehenderit. Cillum do proident laboris eiusmod exercitation id eu
@@ -79,7 +81,7 @@ function Instructions() {
           pb={3}
           sx={{ py: 6, width: "100%", background: "#" }}
         >
-          <Typography sx={{ textAlign: "right" }} variant="h4">
+          <Typography gutterBottom sx={{ textAlign: "right" }} variant="h4">
             Receive Peace of Mind
           </Typography>
           <Typography sx={{ textAlign: "right" }}>
@@ -109,7 +111,9 @@ function Instructions() {
           pb={3}
           sx={{ py: 6, width: "100%", background: "#" }}
         >
-          <Typography variant="h4">Become a Learner and Grow</Typography>
+          <Typography gutterBottom variant="h4">
+            Become a Learner and Grow
+          </Typography>
           <Typography>
             This is a paragraph Ipsum labore ut tempor anim ut veniam sint
             reprehenderit. Cillum do proident laboris eiusmod exercitation id eu

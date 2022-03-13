@@ -8,6 +8,7 @@ import {
   Box,
   Dialog,
   TextField,
+  Chip,
 } from "@mui/material";
 import { LinkedIn, Facebook, Instagram } from "@mui/icons-material";
 import Image from "next/image";
@@ -16,6 +17,7 @@ import BarChart from "../../assets/bar-chart.png";
 import axios from "axios";
 import { useState } from "react";
 import NumberFormat from "react-number-format";
+import { eachOfSeries } from "async";
 
 const Learner = ({ learner, investments }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,9 +62,9 @@ const Learner = ({ learner, investments }) => {
               alignContent="center"
               justifyContent="center"
             >
-              <LinkedIn />
-              <Facebook />
-              <Instagram />
+              <LinkedIn sx={{ color: "#0e76a8" }} fontSize="large" />
+              <Facebook sx={{ color: "#3b5998" }} fontSize="large" />
+              <Instagram sx={{ color: "#E1306C" }} fontSize="large" />
             </Grid>
           </Grid>
         </Card>
@@ -82,10 +84,7 @@ const Learner = ({ learner, investments }) => {
             <Card sx={{ width: "100%", background: "#E3B4B4" }}>
               <Box p={3}>
                 <Typography variant="h5">Where I am</Typography>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et.
-                </Typography>
+                <Typography>{learner.whereIam}</Typography>
               </Box>
             </Card>
           </Grid>
@@ -93,10 +92,7 @@ const Learner = ({ learner, investments }) => {
             <Card sx={{ width: "100%", background: "#98CAD2" }}>
               <Box p={3}>
                 <Typography variant="h5">Where I wanna be</Typography>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </Typography>
+                <Typography>{learner.whereIWannaBe}</Typography>
               </Box>
             </Card>
           </Grid>
@@ -107,10 +103,7 @@ const Learner = ({ learner, investments }) => {
                 <Typography variant="h5">
                   What do I need to get there
                 </Typography>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </Typography>
+                <Typography>{learner.whatDoINeed}</Typography>
               </Box>
             </Card>
           </Grid>
@@ -136,7 +129,7 @@ const Learner = ({ learner, investments }) => {
           <Typography variant="h6">Current Investments</Typography>
 
           <Grid container spacing={2}>
-            {investments.map((investor, idx) => {
+            {investments.map((investment, idx) => {
               return (
                 <Grid key={idx} item xs={12} sx={{ cursor: "pointer" }}>
                   <Card>
@@ -144,14 +137,44 @@ const Learner = ({ learner, investments }) => {
                       <Grid item>
                         <Avatar
                           variant="square"
-                          src={investor.avatar}
+                          src={investment.funder.avatar}
                           alt="Learner"
                           sx={{ height: 100, width: 100 }}
                         />
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={3}>
                         <Typography variant="h6">
-                          {investor.firstName} {investor.lastName}
+                          {investment.funder.firstName}{" "}
+                          {investment.funder.lastName}
+                        </Typography>
+
+                        <Typography>
+                          <strong>Location:</strong>&nbsp;
+                          {investment.funder.city}, {investment.funder.state}
+                        </Typography>
+                        <Chip
+                          sx={{ background: "#98CAD2" }}
+                          label={investment.funder.investmentInterests}
+                        />
+                      </Grid>
+                      <Grid item xs={7}>
+                        <Typography>
+                          <strong>Pleged:</strong>&nbsp;
+                          <NumberFormat
+                            thousandSeparator
+                            prefix="$"
+                            displayType="text"
+                            placeholder="Enter Amount"
+                            value={investment.amount}
+                          />
+                        </Typography>
+                        <Typography>
+                          <strong>Status:</strong>&nbsp;
+                          {investment.status}
+                        </Typography>
+                        <Typography>
+                          <strong>Funder Bio:</strong>&nbsp;
+                          {investment.funder.bio}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -276,17 +299,34 @@ const getLearnerInvestments = async (learnerId) => {
   return investments;
 };
 
+const getFunder = async (funderId) => {
+  const { data: funders } = await axios.get(
+    `https://5zyb68jrp6.execute-api.us-east-1.amazonaws.com/prod/api/v1/funder/${funderId}`
+  );
+  return funders;
+};
+
 export async function getServerSideProps({ query, params }) {
   const { learnerId } = params;
   const learner = await getLearner(learnerId);
   const { investments } = await getLearnerInvestments(learnerId);
 
-  console.log(investments);
+  let investmentsWithFunders = [];
+  await eachOfSeries(investments, async (investment) => {
+    const funder = await getFunder(investment.funderId);
+
+    const newInvestment = {
+      ...investment,
+      funder,
+    };
+
+    investmentsWithFunders.push(newInvestment);
+  });
 
   return {
     props: {
       learner,
-      investments,
+      investments: investmentsWithFunders,
     },
   };
 }
