@@ -1,10 +1,26 @@
+import { useState } from 'react';
 import PageLayout from "../layouts/PageLayout";
+import Contact from "../components/Contact"
 import styles from "../styles/Home.module.css";
 import HeroArt from "../assets/hero-art.png";
-import { Box, Typography, Button, Grid, Container, Card, CardContent, CardActions, FormGroup, FormControl, FormHelperText, InputLabel, Input, TextField } from "@mui/material";
+import { Box, Typography, Button, Grid, Card, CardContent, CardActions, FormGroup, FormControl, FormHelperText, InputLabel, Input, TextField } from "@mui/material";
 import Image from "next/image";
 
 export default function Home() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    const data = {
+      name,
+      email,
+      message,
+    };
+    console.log(data);
+  };
+
   return (
     <PageLayout sx={{ background: "#eaeaea" }}>
       <Box display="flex" sx={{ background: "#D9D0B8" }}>
@@ -164,18 +180,8 @@ export default function Home() {
         </Box>
       </Box>
       {/* CONTACT */}
-      <Box display="flex" flexDirection="column">
-        <Typography variant="h4">
-          Contact
-        </Typography>
-        <FormControl>
-        <Box display="flex" alignContent="center" justifyContent="space-between">
-          <TextField id="standard-basic" label="Name" variant="standard" required />
-          <TextField id="standard-basic" label="Email" variant="standard" required helperText="required"/>
-        </Box>
-          <TextField multiline minRows="" id="outline-basic" label="Message" variant="outlined" />
-          <Button>Submit</Button>
-        </FormControl>
+      <Box>
+        <Contact></Contact>
       </Box>
     </PageLayout>
   );
