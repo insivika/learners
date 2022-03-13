@@ -1,12 +1,26 @@
 import PageLayout from "../../layouts/PageLayout";
-import { Card, Grid, Avatar, Typography, Button, Box } from "@mui/material";
-import NumberFormat from "react-number-format";
+import {
+  Card,
+  Grid,
+  Avatar,
+  Typography,
+  Button,
+  Box,
+  Dialog,
+  TextField,
+} from "@mui/material";
 import { LinkedIn, Facebook, Instagram } from "@mui/icons-material";
 import Image from "next/image";
 import PiChart from "../../assets/pi-chart.png";
 import BarChart from "../../assets/bar-chart.png";
+import axios from "axios";
+import { useState } from "react";
+import NumberFormat from "react-number-format";
 
-const Learner = ({ learner }) => {
+const Learner = ({ learner, investments }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [investmentAmount, setInvestmentAmount] = useState("");
+
   return (
     <PageLayout>
       <Grid container>
@@ -25,15 +39,8 @@ const Learner = ({ learner }) => {
                 {learner.firstName} {learner.lastName}
               </Typography>
               <Typography>{learner.location}</Typography>
-              <Typography>
-                <NumberFormat
-                  thousandSeparator
-                  fixedDecimalScale
-                  displayType="text"
-                  prefix="$"
-                  value={learner.investmentNeeds.seeking}
-                />
-              </Typography>
+              <Typography>{learner.tradeFocus}</Typography>
+              <Typography>{learner.investmentNeeds}</Typography>
             </Grid>
             <Grid
               item
@@ -64,6 +71,7 @@ const Learner = ({ learner }) => {
             sx={{ background: "#E37965" }}
             variant="contained"
             size="large"
+            onClick={() => setIsModalOpen(true)}
           >
             Fund This Learner
           </Button>
@@ -125,10 +133,10 @@ const Learner = ({ learner }) => {
         </Grid>
 
         <Grid container>
-          <Typography variant="h6">Current Investors</Typography>
+          <Typography variant="h6">Current Investments</Typography>
 
           <Grid container spacing={2}>
-            {learner.investors.map((investor, idx) => {
+            {investments.map((investor, idx) => {
               return (
                 <Grid key={idx} item xs={12} sx={{ cursor: "pointer" }}>
                   <Card>
@@ -154,47 +162,131 @@ const Learner = ({ learner }) => {
           </Grid>
         </Grid>
       </Grid>
+
+      <Dialog onClose={() => setIsModalOpen(false)} open={isModalOpen}>
+        <Box minWidth={400} py={3} px={2}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <NumberFormat
+                label="Investment Amount"
+                thousandSeparator
+                prefix="$"
+                customInput={TextField}
+                placeholder="Enter Amount"
+                onChange={setInvestmentAmount}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Box
+                borderRadius={4}
+                backgroundColor="#E3B4B4"
+                height={150}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Typography sx={{ fontWeight: 500, fontSize: 22 }}>
+                  Donate
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Box
+                borderRadius={4}
+                backgroundColor="#98CAD2"
+                height={150}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection="column"
+              >
+                <Typography sx={{ fontWeight: 500, fontSize: 22 }}>
+                  Lender
+                </Typography>
+                <Typography sx={{ fontWeight: 200, fontSize: 16 }}>
+                  I want my money back
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Box
+                borderRadius={4}
+                backgroundColor="#E37965"
+                height={150}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection="column"
+              >
+                <Typography sx={{ fontWeight: 500, fontSize: 22 }}>
+                  Investor
+                </Typography>
+                <Typography sx={{ fontWeight: 200, fontSize: 16 }}>
+                  I want my money back +
+                </Typography>
+                <Box display="flex" alignItems="center">
+                  <NumberFormat
+                    thousandSeparator
+                    prefix="$"
+                    customInput={TextField}
+                    placeholder="Enter Amount"
+                  />
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item container spacing={2} justifyContent="flex-end">
+              <Grid item>
+                <Button
+                  onClick={() => setIsModalOpen(false)}
+                  variant="contained"
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={() => setIsModalOpen(false)}
+                  variant="contained"
+                >
+                  Save
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+      </Dialog>
     </PageLayout>
   );
 };
 
 export default Learner;
 
-const getLearner = async () => {
-  //   const { data: learners } = await axios.get("/api/learners");
-  //   return learners;
+const getLearner = async (learnerId) => {
+  const { data: learner } = await axios.get(
+    `https://5zyb68jrp6.execute-api.us-east-1.amazonaws.com/prod/api/v1/learner/${learnerId}`
+  );
+  return learner;
 };
 
-export async function getServerSideProps({ query }) {
-  const learner = await getLearner();
+const getLearnerInvestments = async (learnerId) => {
+  const { data: investments } = await axios.get(
+    `https://5zyb68jrp6.execute-api.us-east-1.amazonaws.com/prod/api/v1/learner/${learnerId}/investment`
+  );
+  return investments;
+};
+
+export async function getServerSideProps({ query, params }) {
+  const { learnerId } = params;
+  const learner = await getLearner(learnerId);
+  const { investments } = await getLearnerInvestments(learnerId);
+
+  console.log(investments);
 
   return {
     props: {
-      learner: {
-        avatar: "https://picsum.photos/id/1/200/200",
-        firstName: "Michelle",
-        lastName: "Learner",
-        id: 123,
-        bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        trade: "Software Engineer",
-        focus: "test",
-        location: "Nashville, TN",
-        investmentNeeds: {
-          seeking: 10000,
-        },
-        investors: [
-          {
-            avatar: "https://picsum.photos/id/10/200/200",
-            firstName: "Pam",
-            lastName: "Beesley",
-          },
-          {
-            avatar: "https://picsum.photos/id/11/200/200",
-            firstName: "Michael",
-            lastName: "Scott",
-          },
-        ],
-      },
+      learner,
+      investments,
     },
   };
 }
